@@ -1,0 +1,76 @@
+** 8 BIT COMPUTER **
+
+** CYCLE **
+The fetch-execute cycle will be very simple, finishing one command completely before starting another.
+Pipelining is definitely something I'll tackle in the future, but I want this to be a simple computer.
+
+** REGISTERS **
+There will be the following 8 bit registers:
+A:  General Purpose Register
+B:  General Purpose Register
+C:  General Purpose Register
+D:  General Purpose Register
+PC: Program Counter
+MP: Memory Pointer (Determines address to read/write in memory)
+
+** LOCATIONS **
+All of the above registers are valid locations, as well as the following:
+
+IN:  Gets value from input. Blocks program until input is recieved.
+OUT: Output value
+MEM: Memory
+
+** INSTRUCTIONS **
+Instructions will be four bytes.
+
+Byte 1: Opcode
+Byte 2: Destination
+Byte 3: First parameter
+Byte 4: Second parameter
+
+The second parameter will not be required depending on the opcode in the assembly language, but it will be present in the binary.
+Not sure if there are any libraries to make assembly languages easily, but this one will be pretty much a find and replace.
+Nothing fancy like order of operations or anything.
+% sign means address to a location, nothing means literal.
+This will translate to the MSB being 1 meaning First Parameter is register, while MSB - 1 determines Second Parameter.
+
+There are the following instructions:
+
+ADD:  Adds 2 values
+SUB:  Subtracts 2 values
+AND:  Bitwise AND of 2 values
+OR:   Bitwise OR of 2 values
+NOT:  Bitwise NOT of a single value
+XOR:  Bitwise XOR of two values
+GT:   Sets PC to destination if First Parameter is greater than Second Parameter
+GTE:  Sets PC to destination if First Parameter is greater than or equal to Second Parameter
+LT:   Sets PC to destination if First Parameter is less than Second Parameter
+LTE:  Sets PC to destination if First Parameter is less than or equal to Second Parameter
+EQ:   Sets PC to destination if First Parameter is equal to Second Parameter
+NEQ:  Sets PC to destination if First Parameter is not equal to Second Parameter
+MOV:  Moves specified value into destination
+JNZ:  Jumps to specified destination value, if First Parameter is not equal to zero
+
+** MACHINE CODE **
+The format of the Opcode byte will be the following:
+
+- The two most significant bits determine if their corresponding parameters are addresses or literals, with '1' being address.
+
+- The remaining 6 bits are for the opcodes. 
+If the operation is an ALU operation, the 6th MSB will be on. If the operation is a conditional one, the 5th MSB will be on.
+
+Binary for each of the instructions ('x' means irrelevant):
+ADD: xx100000
+SUB: xx100001
+AND: xx100010
+OR:  xx100011
+NOT: xx100100
+XOR: xx100111
+GT:  xx010001
+GTE: xx010010
+LT:  xx010011
+LTE: xx010100
+EQ:  xx010101
+NEQ: xx010110
+MOV: xx000001
+JNZ: xx000010
