@@ -1,12 +1,12 @@
-package comparator_types is
+package ComparatorTypes is
     type CompOperation is (GT, GTE, LT, LTE, ET, NET);
-end package comparator_types;
+end package ComparatorTypes;
 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-use work.comparator_types.all;
+use work.ComparatorTypes.all;
 
 entity comparator is
     generic (
@@ -38,7 +38,7 @@ architecture rtl of comparator is
             if index = 0 then
                 return '0';
             end if;
-            
+
             index := index - 1;
         end loop;
 

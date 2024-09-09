@@ -74,3 +74,16 @@ EQ:  xx010101
 NEQ: xx010110
 MOV: xx000001
 JNZ: xx000010
+
+Destinations will be translated into binary as well.
+The MSB of registers is 0, while it is 1 for all others.
+It uses the following scheme:
+A:   00000001
+B:   00000010
+C:   00000011
+D:   00000100
+PC:  00000101
+MP:  00000110
+IN:  10000111
+OUT: 10001000
+MEM: 10001001
