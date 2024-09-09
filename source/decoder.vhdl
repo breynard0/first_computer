@@ -21,7 +21,9 @@ package DecoderTypes is
         dec_OpEQ,
         dec_OpNEQ,
         dec_OpMOV,
-        dec_OpJNZ
+        dec_OpJNZ,
+        dec_OpMGT,
+        dec_OpMST
     );
 
     type INSTRUCTION is record
@@ -41,21 +43,47 @@ use work.ComputerTypes.all;
 
 entity decoder is
     port (
-        bytes : in RAW_BYTES;
-        inst  : out INSTRUCTION;
-        registers: in REGISTERS
+        bytes     : in RAW_BYTES;
+        inst      : out INSTRUCTION;
+        registers : in REGISTERS
     );
 end entity;
 
 architecture rtl of decoder is
-    impure function gen_inst(opcode : Opcode; fa: boolean; sa: boolean) return INSTRUCTION is
+    impure function gen_inst(opcode : Opcode; fa : boolean; sa : boolean) return INSTRUCTION is
         variable fp : unsigned(BIT_WIDTH downto 0) := bytes(2);
         variable sp : unsigned(BIT_WIDTH downto 0) := bytes(3);
     begin
         if fa then
-            
+            if fp(BIT_WIDTH) = '1' then
+                case fp is
+                    when "10000111" =>
+                        get_input(fp);
+                    when "10001000" => 
+                        report "Error: Tried to set parameter to output";
+                    when others =>
+                        null;
+                end case;
+            else
+                fp := get_reg_value(fp, registers);
+            end if;
         end if;
-        
+
+        if sa then
+            if sp(BIT_WIDTH) = '1' then
+                case sp is
+                    when "10000111" =>
+                        get_input(sp);
+                    when "10001000" => 
+                        report "Error: Tried to set parameter to output";
+                    when others =>
+                        null;
+                end case;
+            else
+                sp := get_reg_value(sp, registers);
+            end if;
+        end if;
+
         return (
         opcode       => opcode,
         destination  => bytes(1),
@@ -68,8 +96,6 @@ begin
         variable fp : boolean := bytes(0)(BIT_WIDTH) = '1';
         variable sp : boolean := bytes(0)(BIT_WIDTH - 1) = '1';
     begin
-
-
         case shift_left(bytes(0), 2) is
             when "10000000" =>
                 inst <= gen_inst(dec_OpADD, fp, sp);
@@ -99,6 +125,10 @@ begin
                 inst <= gen_inst(dec_OpMOV, fp, sp);
             when "00001000" =>
                 inst <= gen_inst(dec_OpJNZ, fp, sp);
+            when "00000011" =>
+                inst <= gen_inst(dec_OpMGT, fp, sp);
+            when "00000100" =>
+                inst <= gen_inst(dec_OpMST, fp, sp);
             when others =>
                 null;
         end case;

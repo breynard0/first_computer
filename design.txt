@@ -18,7 +18,6 @@ All of the above registers are valid locations, as well as the following:
 
 IN:  Gets value from input. Blocks program until input is recieved.
 OUT: Output value
-MEM: Memory
 
 ** INSTRUCTIONS **
 Instructions will be four bytes.
@@ -42,14 +41,16 @@ AND:  Bitwise AND of 2 values
 OR:   Bitwise OR of 2 values
 NOT:  Bitwise NOT of a single value
 XOR:  Bitwise XOR of two values
-GT:   Sets PC to destination if First Parameter is greater than Second Parameter
-GTE:  Sets PC to destination if First Parameter is greater than or equal to Second Parameter
-LT:   Sets PC to destination if First Parameter is less than Second Parameter
-LTE:  Sets PC to destination if First Parameter is less than or equal to Second Parameter
-EQ:   Sets PC to destination if First Parameter is equal to Second Parameter
-NEQ:  Sets PC to destination if First Parameter is not equal to Second Parameter
-MOV:  Moves specified value into destination
+GT:   Sets PC to Destination if First Parameter is greater than Second Parameter
+GTE:  Sets PC to Destination if First Parameter is greater than or equal to Second Parameter
+LT:   Sets PC to Destination if First Parameter is less than Second Parameter
+LTE:  Sets PC to Destination if First Parameter is less than or equal to Second Parameter
+EQ:   Sets PC to Destination if First Parameter is equal to Second Parameter
+NEQ:  Sets PC to Destination if First Parameter is not equal to Second Parameter
+MOV:  Moves specified value into Destination
 JNZ:  Jumps to specified destination value, if First Parameter is not equal to zero
+MGT:  Moves value in memory specified at First Parameter to Destination
+MST:  Moves value in First Parameter to memory at Destination
 
 ** MACHINE CODE **
 The format of the Opcode byte will be the following:
@@ -74,6 +75,8 @@ EQ:  xx010101
 NEQ: xx010110
 MOV: xx000001
 JNZ: xx000010
+MGT: xx000011
+MST: xx000100
 
 Destinations will be translated into binary as well.
 The MSB of registers is 0, while it is 1 for all others.
@@ -86,4 +89,3 @@ PC:  00000101
 MP:  00000110
 IN:  10000111
 OUT: 10001000
-MEM: 10001001

@@ -14,6 +14,9 @@ package ComputerTypes is
         r_MP : unsigned(BIT_WIDTH downto 0);
     end record;
     function get_reg_value (index : unsigned(BIT_WIDTH downto 0); registers : REGISTERS) return unsigned;
+    procedure get_input (variable input    : out unsigned(BIT_WIDTH downto 0));
+    procedure push_output (variable output : in unsigned(BIT_WIDTH downto 0));
+
 end package;
 
 package body ComputerTypes is
@@ -36,4 +39,27 @@ package body ComputerTypes is
                 return "00000000";
         end case;
     end function;
+
+    procedure get_input (variable input : out unsigned(BIT_WIDTH downto 0)) is
+    begin
+        -- Will improve when I get my hands on an FPGA board
+        input := "00000001";
+    end procedure;
+
+    procedure push_output (variable output : in unsigned(BIT_WIDTH downto 0)) is
+    begin
+        report integer'image(to_integer(output));
+    end procedure;
 end package body ComputerTypes;
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.math_real.all;
+
+entity computer is
+    port (
+        clk   : in std_logic;
+        reset : in std_logic
+    );
+end entity;
