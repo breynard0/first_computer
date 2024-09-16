@@ -1,12 +1,8 @@
-package ComparatorTypes is
-    type CompOperation is (GT, GTE, LT, LTE, ET, NET);
-end package ComparatorTypes;
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-use work.ComparatorTypes.all;
+use work.DecoderTypes.all;
 
 entity comparator is
     generic (
@@ -15,7 +11,7 @@ entity comparator is
     port (
         i_A     : in unsigned(BIT_WIDTH downto 0);
         i_B     : in unsigned(BIT_WIDTH downto 0);
-        i_Op    : in CompOperation;
+        i_Op    : in OPCODE;
         o_Value : out std_logic
     );
 end entity;
@@ -53,17 +49,17 @@ begin
     process (all) is
     begin
         case i_Op is
-            when GT =>
+            when dec_OpGT =>
                 o_Value <= gt(i_A, i_B);
-            when GTE =>
+            when dec_OpGTE =>
                 o_Value <= gt(i_A, i_B) or eq(i_A, i_B);
-            when LT =>
+            when dec_OpLT =>
                 o_Value <= (not gt(i_A, i_B)) and (not eq(i_A, i_B));
-            when LTE =>
+            when dec_OpLTE =>
                 o_Value <= (not gt(i_A, i_B)) or eq(i_A, i_B);
-            when ET =>
+            when dec_OpEQ =>
                 o_Value <= eq(i_A, i_B);
-            when NET =>
+            when dec_OpNEQ =>
                 o_Value <= not eq(i_A, i_B);
             when others =>
                 null;

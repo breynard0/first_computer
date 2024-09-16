@@ -2,50 +2,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-use work.ComputerTypes.all;
-
-package DecoderTypes is
-    type RAW_BYTES is array (0 to 3) of unsigned(BIT_WIDTH downto 0);
-
-    type OPCODE is (
-        dec_OpADD,
-        dec_OpSUB,
-        dec_opAND,
-        dec_OpOR,
-        dec_OpNOT,
-        dec_OpXOR,
-        dec_OpGT,
-        dec_OpGTE,
-        dec_OpLT,
-        dec_OpLTE,
-        dec_OpEQ,
-        dec_OpNEQ,
-        dec_OpMOV,
-        dec_OpJNZ,
-        dec_OpMGT,
-        dec_OpMST
-    );
-
-    type INSTRUCTION is record
-        opcode       : OPCODE;
-        destination  : unsigned(BIT_WIDTH downto 0);
-        first_param  : unsigned(BIT_WIDTH downto 0);
-        second_param : unsigned(BIT_WIDTH downto 0);
-    end record;
-end package;
-
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-use ieee.math_real.all;
 use work.DecoderTypes.all;
 use work.ComputerTypes.all;
 
 entity decoder is
     port (
         bytes     : in RAW_BYTES;
-        inst      : out INSTRUCTION;
-        registers : in REGISTERS
+        registers : in REGISTERS;
+        inst      : out INSTRUCTION
     );
 end entity;
 
@@ -96,6 +60,9 @@ begin
         variable fp : boolean := bytes(0)(BIT_WIDTH) = '1';
         variable sp : boolean := bytes(0)(BIT_WIDTH - 1) = '1';
     begin
+        fp := bytes(0)(BIT_WIDTH) = '1';
+        sp := bytes(0)(BIT_WIDTH - 1) = '1';
+        -- report std_logic'image(bytes(0)(BIT_WIDTH)) & " + " & boolean'image(fp);
         case shift_left(bytes(0), 2) is
             when "10000000" =>
                 inst <= gen_inst(dec_OpADD, fp, sp);
@@ -125,10 +92,12 @@ begin
                 inst <= gen_inst(dec_OpMOV, fp, sp);
             when "00001000" =>
                 inst <= gen_inst(dec_OpJNZ, fp, sp);
-            when "00000011" =>
+            when "00001100" =>
                 inst <= gen_inst(dec_OpMGT, fp, sp);
-            when "00000100" =>
+            when "00010000" =>
                 inst <= gen_inst(dec_OpMST, fp, sp);
+            when "00010100" =>
+                inst <= gen_inst(dec_OpHLT, fp, sp);
             when others =>
                 null;
         end case;

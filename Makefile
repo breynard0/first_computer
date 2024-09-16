@@ -24,6 +24,10 @@ WAVEFORM_VIEWER = gtkwave
 all: clean make run
 # all: clean make run view
 
+define ghdla
+	@$(GHDL_CMD) -a $(GHDL_FLAGS) $(1)
+endef
+
 make:
 ifeq ($(strip $(TESTBENCH)),)
 	@echo "TESTBENCH not set. Use TESTBENCH=<value> to set it."
@@ -31,12 +35,22 @@ ifeq ($(strip $(TESTBENCH)),)
 endif
 
 	@mkdir -p $(WORKDIR)
-	@$(GHDL_CMD) -a $(GHDL_FLAGS) $(FILES)
-	@$(GHDL_CMD) -a $(GHDL_FLAGS) $(TESTBENCHPATH)
-	@$(GHDL_CMD) -e $(GHDL_FLAGS) $(TESTBENCHFILE)
+	
+	@$(GHDL_CMD) -i $(GHDL_FLAGS) $(FILES)
+	@$(GHDL_CMD) -i $(GHDL_FLAGS) $(TESTBENCHPATH)
+
+	@$(GHDL_CMD) -m $(GHDL_FLAGS) $(TESTBENCHFILE)
+
+	# @$(call ghdla, "source/types.vhdl")
+	# @$(call ghdla, "source/memory.vhdl")
+	# @$(call ghdla, "source/decoder.vhdl")
+	# @$(call ghdla, "source/program.vhdl")
+	# @$(call ghdla, $(FILES))
+	# @$(GHDL_CMD) -a $(GHDL_FLAGS) $(TESTBENCHPATH)
+	# @$(GHDL_CMD) -e $(GHDL_FLAGS) $(TESTBENCHFILE)
 
 run:
-	@$(GHDL_CMD) -r $(GHDL_FLAGS) --workdir=$(WORKDIR) $(TESTBENCHFILE) --vcd=out.vcd $(GHDL_SIM_OPT)
+	@$(GHDL_CMD) -r $(GHDL_FLAGS) --workdir=$(WORKDIR) $(TESTBENCHFILE) --wave=out.ghw $(GHDL_SIM_OPT)
 	@mv $(TESTBENCHFILE) $(WORKDIR)/
 	@mv e~$(TESTBENCHFILE).o $(WORKDIR)/
 

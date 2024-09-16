@@ -1,4 +1,6 @@
 out.vcd
+out.ghw
+wave.gtkw
 vhdl_ls.toml
 work
 out

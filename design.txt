@@ -11,10 +11,9 @@ B:  General Purpose Register
 C:  General Purpose Register
 D:  General Purpose Register
 PC: Program Counter
-MP: Memory Pointer (Determines address to read/write in memory)
 
 ** LOCATIONS **
-All of the above registers are valid locations, as well as the following:
+All of the above registers are valid locations (except PC, use JMP), as well as the following:
 
 IN:  Gets value from input. Blocks program until input is recieved.
 OUT: Output value
@@ -41,16 +40,21 @@ AND:  Bitwise AND of 2 values
 OR:   Bitwise OR of 2 values
 NOT:  Bitwise NOT of a single value
 XOR:  Bitwise XOR of two values
-GT:   Sets PC to Destination if First Parameter is greater than Second Parameter
-GTE:  Sets PC to Destination if First Parameter is greater than or equal to Second Parameter
-LT:   Sets PC to Destination if First Parameter is less than Second Parameter
-LTE:  Sets PC to Destination if First Parameter is less than or equal to Second Parameter
-EQ:   Sets PC to Destination if First Parameter is equal to Second Parameter
-NEQ:  Sets PC to Destination if First Parameter is not equal to Second Parameter
+GT:   Sets Destination to 1 if First Parameter is greater than Second Parameter
+GTE:  Sets Destination to 1 if First Parameter is greater than or equal to Second Parameter
+LT:   Sets Destination to 1 if First Parameter is less than Second Parameter
+LTE:  Sets Destination to 1 if First Parameter is less than or equal to Second Parameter
+EQ:   Sets Destination to 1 if First Parameter is equal to Second Parameter
+NEQ:  Sets Destination to 1 if First Parameter is not equal to Second Parameter
 MOV:  Moves specified value into Destination
 JNZ:  Jumps to specified destination value, if First Parameter is not equal to zero
 MGT:  Moves value in memory specified at First Parameter to Destination
-MST:  Moves value in First Parameter to memory at Destination
+MST:  Moves value in Second Parameter to memory at First Parameter (use '_' in destination place)
+HLT:  Halts the program
+
+Extra keywords in the assembler:
+LABEL: Labels a code location. Converted to binary by the assembler.
+Each of the registers will also have code that gets converted to its binary
 
 ** MACHINE CODE **
 The format of the Opcode byte will be the following:
@@ -77,6 +81,7 @@ MOV: xx000001
 JNZ: xx000010
 MGT: xx000011
 MST: xx000100
+HLT: xx000101
 
 Destinations will be translated into binary as well.
 The MSB of registers is 0, while it is 1 for all others.
@@ -85,7 +90,5 @@ A:   00000001
 B:   00000010
 C:   00000011
 D:   00000100
-PC:  00000101
-MP:  00000110
 IN:  10000111
 OUT: 10001000

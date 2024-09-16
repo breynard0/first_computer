@@ -34,7 +34,6 @@ begin
         end if;
 
         if i_Get = '1' then
-            report integer'image(to_integer(i_Address));
             o_Value <= r_MemBlock(to_integer(i_Address));
         end if;
     end process;

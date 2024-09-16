@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.ALUTypes.all;
+use work.DecoderTypes.all;
 
 entity alu_tb is
 end entity;
@@ -12,7 +12,7 @@ architecture sim of alu_tb is
     constant BIT_WIDTH : integer := 7;
     signal A           : unsigned(BIT_WIDTH downto 0);
     signal B           : unsigned(BIT_WIDTH downto 0);
-    signal Op          : AluOperation := Add;
+    signal Op          : OPCODE := dec_OpAdd;
     signal Value       : unsigned(BIT_WIDTH downto 0);
 begin
     alu_inst : entity work.alu
@@ -36,32 +36,32 @@ begin
 
                 wait for 10 ns;
 
-                Op <= Add;
+                Op <= dec_OpAdd;
                 wait for 10 ns;
                 assert Value = (A + B)
                 report "Assertion failed for Add (" & integer'image(to_integer(unsigned(A))) & ", " & integer'image(to_integer(unsigned(B))) & ")";
 
-                Op <= Sub;
+                Op <= dec_OpSub;
                 wait for 10 ns;
                 assert Value = (A - B)
                 report "Assertion failed for Sub (" & integer'image(to_integer(unsigned(A))) & ", " & integer'image(to_integer(unsigned(B))) & ")";
 
-                Op <= OpAnd;
+                Op <= dec_OpAnd;
                 wait for 10 ns;
                 assert Value = (A and B)
                 report "Assertion failed for AND (" & integer'image(to_integer(unsigned(A))) & ", " & integer'image(to_integer(unsigned(B))) & ")";
 
-                Op <= OpOr;
+                Op <= dec_OpOr;
                 wait for 10 ns;
                 assert Value = (A or B)
                 report "Assertion failed for OR (" & integer'image(to_integer(unsigned(A))) & ", " & integer'image(to_integer(unsigned(B))) & ")";
 
-                Op <= OpNot;
+                Op <= dec_OpNot;
                 wait for 10 ns;
                 assert Value = (not A)
                 report "Assertion failed for NOT (" & integer'image(to_integer(unsigned(A))) & ")";
 
-                Op <= OpXor;
+                Op <= dec_OpXor;
                 wait for 10 ns;
                 assert Value = (A xor B)
                 report "Assertion failed for XOR (" & integer'image(to_integer(unsigned(A))) & ", " & integer'image(to_integer(unsigned(B))) & ")";
